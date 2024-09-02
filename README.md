@@ -4,10 +4,7 @@ Introduction to data exloration in R. HSE course, Masters 1 year
 Based on [this course](https://pozdniakov.github.io/tidy_stats/index.html) and on [this course](https://agricolamz.github.io/DS_for_DH/)
 
 ### Instructor
-* Alexandra Konovalova
-
-* [gmail](alxdra.konovalova@gmail.com)
-* [tg](@sashonet)
+* Alexandra Konovalova (alxdra.konovalova@gmail.com [tg](@sashonet))
 
 ### Schedule
 <table>
