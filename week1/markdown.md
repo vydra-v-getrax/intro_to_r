@@ -112,10 +112,10 @@ To insert a picture:
 For example:
 
 ```
-![](http://3.bp.blogspot.com/-_DLc3qDxsNA/VenIznBsK7I/AAAAAAAAB0A/GHjI_97B364/s1600/TheFunk.jpg)
+![image](https://github.com/user-attachments/assets/ebd5bf95-c925-4594-9207-f407d18413d5)
 ```
 
-![](http://3.bp.blogspot.com/-_DLc3qDxsNA/VenIznBsK7I/AAAAAAAAB0A/GHjI_97B364/s1600/TheFunk.jpg)
+![image](https://github.com/user-attachments/assets/ebd5bf95-c925-4594-9207-f407d18413d5)
 
 ###### Tables
 
