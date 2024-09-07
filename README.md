@@ -6,6 +6,21 @@ Based on [this course](https://pozdniakov.github.io/tidy_stats/index.html) and o
 ### Instructor
 * Alexandra Konovalova (alxdra.konovalova@gmail.com [@sashonet](https://t.me/sashonet))
 
+### Assessment
+
+0.4 * Assignment1 + 0.5 * Assignment2 + 0.1 * quizzes + 0.2 * bonus task
+
+quizzes = (quiz1 + quiz2)/2
+
+Assignments can be completed within a week of the distribution for the max. of 10 points, within two weeks for the max. of 8 points.
+Bonus assignment is optional and will be announced in October. If your final grade is greater than 10, it counts as 10. 
+
+Quiz is a no-code test with short questions on theory. Quiz can be completed within a week.
+
+If you prefer not to attend the classes, you can submit a project instead of doing the assignments. 
+
+All assignments should be submitted via email. 
+
 ### Schedule
 <table>
   <tr>
@@ -20,14 +35,28 @@ Based on [this course](https://pozdniakov.github.io/tidy_stats/index.html) and o
     <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week1/Introduction.md">Intro to R</a><br>
     <a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week1/markdown.md">Markdown</a></td>
     <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week1/Assignment%200.md">Assignment 0 (optional)</a></td>
-    <td></td>
+    <td>14.09</td>
     <td></td>
  </tr>
  <tr>
   <td>12.09. (room 509)</td>
-  <td><a href="">to be clearified</a><br></td>
   <td></td>
   <td></td>
+  <td></td>
+   <td></td>
+</tr>
+<tr>
+  <td>19.09. (room 509)</td>
+  <td></td>
+  <td>Assignment 1</td>
+  <td>26.09 for the max. of 10, 03.10 for the max. of 8</td>
+   <td></td>
+</tr>
+<tr>
+  <td>26.09. (room 509)</td>
+  <td></td>
+  <td>Quiz 1</td>
+  <td>03.10</td>
    <td></td>
 </tr>
 </table>
