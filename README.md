@@ -19,7 +19,7 @@ Based on [this course](https://pozdniakov.github.io/tidy_stats/index.html) and o
     <td>05.09. (room 509)</td>
     <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week1/Introduction.md">Intro to R</a><br>
     <a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week1/markdown.md">Markdown</a></td>
-    <td></td>
+    <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week1/Assignment%200.md">Assignment 0 (optional)</a></td>
     <td></td>
     <td></td>
  </tr>
