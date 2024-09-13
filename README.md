@@ -43,7 +43,7 @@ All assignments should be submitted via email.
   <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week2/tidyverse.md">Tidyverse</a><br><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week2/visualization.md">Visualization</a></td>
   <td></td>
   <td></td>
-   <td></td>
+   <td><a href="https://drive.google.com/file/d/1cr0E4-wWjQwZ918a0hiBCYE3yF_-g7G1/view?usp=sharing">Record</a></td>
 </tr>
 <tr>
   <td>19.09. (room 509)</td>
