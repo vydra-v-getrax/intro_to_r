@@ -27,7 +27,7 @@ JSON:
 + package ```jsonlite``` (DO NOT execute ```library(jsonlite)```, because it conflicts with ```tidyverse```)
 
 ```{r}
-got_chars <- jsonlite::read_json("https://raw.githubusercontent.com/dashapopova/Intro-to-R/main/week3/got_chars.json")
+got_chars <- jsonlite::read_json("https://raw.githubusercontent.com/vydra-v-getrax/intro_to_r/refs/heads/main/week3/got_chars.json")
 got_chars[1]
 ```
 

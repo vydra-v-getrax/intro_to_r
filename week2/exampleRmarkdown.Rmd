@@ -1,0 +1,96 @@
+---
+title: "rmarkdownexample"
+author: "Dasha"
+date: "09 09 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+1. To start using R Markdown create a new .Rmd file: File - New File - R Markdown
+
+2. If you chose the PDF format, install latex:
+
+```
+install.packages('tinytex')
+tinytex::install_tinytex()  # install TinyTeX
+```
+
+3. Three parts of the file:
+
++ a YAML-header
++ text written using Markdown
++ chunks of code
+
+```{r}
+2+2
+```
+
+For chunks you can specify some parameters:
+
++ echo: if you want to display the code
+
++ message and warning
+
++ eval: if you want to execute the code
+
+Put this at the beginning of the document if you want to specify parameters for all the chunks:
+
+```
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+4. Help -- Markdown Quick Reference
+
+5. [Handout on Markdown](https://github.com/dashapopova/Intro-to-R/blob/main/04.09/Markdown.md)
+
+6. Dynamic tables
+```{r, echo=FALSE}
+library(tidyverse)
+heroes <- read_csv("https://raw.githubusercontent.com/Pozdniakov/tidy_stats/master/data/heroes_information.csv",
+                   na = c("-", "-99"))
+DT::datatable(heroes)
+```
+
+7. Plots
+
+```{r}
+height_weight_gg <- heroes %>%
+  mutate(Publisher = ifelse(Publisher %in% c("Marvel Comics", "DC Comics"), 
+                            Publisher,
+                            "Other publishers")) %>%
+  filter(Weight < 700 & Height < 400) %>%
+  ggplot(aes(x = Height, y = Weight)) +
+  geom_point(aes(colour = Gender), alpha = 0.5) +
+  coord_fixed() +
+  facet_wrap(~Publisher)+
+  theme_minimal()
+height_weight_gg
+```
+
+```{r}
+library(plotly)
+ggplotly(height_weight_gg)
+```
