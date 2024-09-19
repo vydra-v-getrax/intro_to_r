@@ -1,0 +1,272 @@
+## Lists
+
+```
+library(tidyverse)
+```
+### 1. Lists
+
+```{r}
+x <- list(m = "a", n = c(2, 4), o = c("blue", "green", "red"))
+x
+x$m
+x[1]
+x[[2]]
+x[[2]][2]
+```
+
+Outside R, lists are usually stored in .json and .xml formats.
+
+### 2. Converting a list into json and vice versa
+
+
+JSON:
+
++ {"key":"value"}
++ ["value_1","value_2",...]
+
++ package ```jsonlite``` (DO NOT execute ```library(jsonlite)```, because it conflicts with ```tidyverse```)
+
+```{r}
+got_chars <- jsonlite::read_json("https://raw.githubusercontent.com/dashapopova/Intro-to-R/main/week3/got_chars.json")
+got_chars[1]
+```
+
++ to write into a .json:
+
+```{r}
+jsonlite::write_json(got_chars, "got_chars.json", auto_unbox = TRUE)
+# the auto_unbox argument allows us to preserve the structure that we see in R
+```
+
+### 3. Converting .xml into a list and back
+
++ .xml:  <...> something </...>
+
+```
+<bla>Hello, world!</bla>
+```
++ there could be attributes, placed in the opening tag:
+
+```
+<ingredient amount="3" unit="glass">milk</ingredient>
+<ingredient amount="200" unit="gr">flour</ingredient>
+<ingredient amount="1" unit="spoon">sugar</ingredient>
+```
+
+To read from or to write into an .xml file you can by using ```read_xml()``` and ```write_xml()``` functions from the package ```xml2```:
+
+```{r}
+library("xml2")
+xml_example <- read_xml('<body>
+<ingredient amount="3" unit="glass">milk</ingredient>
+<ingredient amount="200" unit="gr">flour</ingredient>
+<ingredient amount="1" unit="spoon">sugar</ingredient>
+</body>')
+xml_example
+```
+
+```
+write_xml(xml_example, "path/to/the/file.xml")
+```
+
++ To present the data as a list:
+
+```{r}
+xml_example <- as_list(xml_example)
+xml_example
+```
+
++ Now, the variable is a list:
+
+```{r}
+xml_example$body[[2]]
+```
+
++ To get attributes and their values:
+
+```{r}
+library(magrittr) # needs to be run every time you start R and want to use %>%
+library(dplyr) 
+```
+
+```{r}
+xml_example$body[[2]] %>% 
+  attributes()
+```
+
++ To get a concrete attribute:
+
+```{r}
+xml_example$body[[2]] %>% 
+  attr("amount")
+```
+
+### 4. Viewing lists in R
+
++ ```View(got_chars)```
+
++ Another option:
+
+```{r}
+str(got_chars[1])
+```
+
+```{r}
+str(got_chars[1], max.level = 2)
+```
+```{r}
+str(xml_example)
+```
+
+### 5. Package ```purrr```
+
+[cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/purrr.pdf)
+
+```{r}
+#install.packages("purrr")
+library(purrr)
+```
+
++ We can now extract values from a list based on the name:
+
+```{r}
+got_chars %>% 
+  map("name")
+```
+
++ and based on an index:
+
+```{r}
+got_chars %>% 
+  map(3)
+```
+
++ to kill the complex structure:
+
+```{r}
+got_chars %>% 
+  map("name") %>% 
+  unlist()
+```
+
++ to create a vector:
+
+```{r}
+got_chars %>% 
+  map_chr("name")
+```
+
+```{r}
+got_chars %>% 
+  map_int("id")
+```
+
+```{r}
+got_chars %>% 
+  map_lgl("alive")
+```
+
++ we can even create a dataframe:
+
+```{r}
+got_chars %>% 
+  tibble(name = map_chr(., "name"), 
+         id = map_dbl(., "id"),
+         alive = map_lgl(., "alive"))
+```
+
++ to get all the attribute values:
+
+```{r}
+xml_example$body %>% 
+  map(attr_getter("amount"))
+```
+
+### 6. Filtering
+
++ If we have logical expressions in the list, we can use them for filtering:
+
+```{r}
+got_chars %>% 
+  keep("alive") %>% 
+  map_chr("name")
+```
+
++ for the dead:
+
+```{r}
+got_chars %>% 
+  discard("alive") %>% 
+  map_chr("name")
+```
+
++ up to the first FALSE:
+
+```{r}
+got_chars %>% 
+  head_while("alive") %>% 
+  map_chr("name")
+```
+
+```{r}
+got_chars %>% 
+  tail_while("alive") %>% 
+  map_chr("name")
+```
+
+```{r}
+got_chars %>% 
+  tibble(name = map_chr(., "name"), 
+         alive = map_lgl(., "alive"))
+```
+
+### 7. Operations
+
+```{r}
+my_l <- list(a = 1:3, b = c("a", "b"), c = list("z", c(8, 9)))
+my_l
+```
+
++ to flatten:
+
+```{r}
+my_l %>% 
+  unlist()
+```
+
+```{r}
+my_l %>% 
+  unlist() %>% 
+  unname()
+```
+
+```{r}
+my_l %>% 
+  flatten()
+```
+
++ to add a list:
+
+```{r}
+list(c(1, 2), c("a", "b", "c")) %>% 
+  append(list(new = c(TRUE, FALSE)))
+```
+
+```{r}
+list(c(1, 2), c("a", "b", "c")) %>% 
+  prepend(list(new = c(TRUE, FALSE)))
+```
+
++ to get unique combinations for two lists:
+
+```{r}
+list(c("a", "b"), 1:3) %>% 
+  cross() %>% 
+  str()
+```
+
+```{r}
+list("a", "b") %>% 
+  cross2(1:3) %>% 
+  str()
+```
