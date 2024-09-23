@@ -51,7 +51,7 @@ All assignments should be submitted via email.
     <br><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week3/lists_upd.Rmd">Lists</a></td>
   <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/assignment1/IntroR_assignment1.md">Assignment 1</a></td>
   <td>26.09 for the max. of 10, <br>03.10 for the max. of 8</td>
-   <td></td>
+   <td><a href="https://drive.google.com/file/d/1lrI7mbmYZfIBXlrto4tSDweOOIT492Ye/view?usp=drive_link">Record</a></td>
 </tr>
 <tr>
   <td>26.09. (room 509)</td>
