@@ -1,0 +1,270 @@
+## Functions
+
+```
+library(tidyverse)
+```
+### 1. Logical operations
+
+**Logical AND**
+
+```{r}
+TRUE & TRUE
+TRUE & FALSE
+FALSE & TRUE
+FALSE & FALSE
+```
+
+**Logical OR**
+
+```{r}
+TRUE | TRUE
+TRUE | FALSE
+FALSE | TRUE
+FALSE | FALSE
+```
+
+**Logical NEG**
+
+```{r}
+!TRUE
+!FALSE
+```
+
+**Comparison**
+
+```{r}
+2 == 2
+2 == 5
+2 != 5
+2 != c(2, 3)
+'flower' == 'rose'
+'rose' == 'rose'
+c(2,3) == c(2,3)
+c(2,5) == c(2,3)
+```
+
+### 2. Creating your own functions
+
+```{r}
+n_syllables <- function(x){
+  stringr::str_count(x, "[АОУЁЕЭЯИЮаоуёеэяию]")
+}
+
+n_syllables("корова")
+
+n_syllables("слон")
+```
+
+Functions depend on the packages that are loaded, you might want to indicate the necessary package explicitly:
+
+```{r}
+n_syllables <- function(x){
+  stringr::str_count(x, "[АОУЁЕЭЯИЮаоуёеэяию]")
+}
+```
+
+Recursion:
+
+```{r}
+factorial <- function(x){
+  if(x-1 > 0){
+    x*factorial(x-1)
+  } else {
+    1
+  }
+}
+
+factorial(3)
+
+factorial(4)
+
+factorial(8)
+
+factorial(0)
+```
+
+Problem 1:
+
+create a function that will compare the length of two words and tell which one is longer.
+
+To test:
+
+```
+which_is_longer("роза", "цветок")
+which_is_longer("олень", "палка")
+which_is_longer("воробей", "птица")
+which_is_longer("boat", "sea")
+```
+
+### The use of conditions
+
+Let's take [the data on the UK pubs](https://raw.githubusercontent.com/dashapopova/Intro-to-R/main/assignment1/UK_pubs.csv). Some of the pub names have *Inn* as part of them. Let's plot twenty most common pubs with *Inn* in their names and without *Inn* in their names. 
+
+```{r}
+library("dplyr")
+library("tidyverse")
+```
+
+```{r}
+uk_pubs <- read.csv("https://raw.githubusercontent.com/dashapopova/Intro-to-R/main/assignment1/UK_pubs.csv")
+uk_pubs %>% 
+  count(pub_name, sort = TRUE) %>% 
+  mutate(inn = str_detect(pub_name, "Inn")) %>% 
+  group_by(inn) %>% 
+  slice(1:20) %>% 
+  ggplot(aes(fct_reorder(pub_name, n), n))+
+  geom_col()+
+  coord_flip()+
+  facet_wrap(~inn, scale = "free")+
+  labs(x = "", y = "", caption = "https://pudding.cool/2019/10/pubs/")
+```
+
+We got what we wanted, but the names TRUE and FALSE are not very appealing. We can rectify the situation by using ```ifelse()``` function that has three arguments:
+
++ condition,
++ the value if the condition takes the value TRUE,
++ the value if the condition takes the value FALSE.
+
+```{r}
+ifelse(2+2 == 4, "correct", "incorrect")
+ifelse(2+2 == 5, "correct", "incorrect")
+```
+
+Let's modify our initial code using this function:
+
+```{r}
+uk_pubs %>% 
+  count(pub_name, sort = TRUE) %>% 
+  mutate(inn = ifelse(str_detect(pub_name, "Inn"), 
+                      "with 'inn'", 
+                      "without 'inn'")) %>%
+  group_by(inn) %>% 
+  slice(1:20) %>% 
+  ggplot(aes(fct_reorder(pub_name, n), n))+
+  geom_col()+
+  coord_flip()+
+  facet_wrap(~inn, scale = "free")+
+  labs(x = "", y = "", caption = "https://pudding.cool/2019/10/pubs/")
+```
+
+What if there are more conditions?
+
+```
+case_when(
+  condition 1 ~ value x,
+  condition 2 ~ value y,
+  ...
+  condition n ~ value z
+)
+```
+
+Let's look for more type of names: with *Inn*, *Hotel*, *Bar*, *House* and *Tavern*:
+
+```{r}
+uk_pubs %>% 
+  count(pub_name, sort = TRUE) %>% 
+  mutate(place = case_when(
+    str_detect(pub_name, "Inn") ~ "inn",
+    str_detect(pub_name, "Hotel") ~ "hotel",
+    str_detect(pub_name, "Bar") ~ "bar",
+    str_detect(pub_name, "House") ~ "house",
+    str_detect(pub_name, "Tavern") ~ "tavern")) %>%
+  group_by(place) %>% 
+  slice(1:10) %>% 
+  ggplot(aes(fct_reorder(pub_name, n), n))+
+  geom_col()+
+  coord_flip()+
+  facet_wrap(~place, scale = "free")+
+  labs(x = "", y = "", caption = "https://pudding.cool/2019/10/pubs/")
+```
+
+What does the NA variant stand for?
+
+```{r}
+uk_pubs %>% 
+  count(pub_name, sort = TRUE) %>% 
+  mutate(place = case_when(
+    str_detect(pub_name, "Inn") ~ "inn",
+    str_detect(pub_name, "Hotel") ~ "hotel",
+    str_detect(pub_name, "Bar") ~ "bar",
+    str_detect(pub_name, "House") ~ "house",
+    str_detect(pub_name, "Tavern") ~ "tavern",
+    TRUE ~ "other")) %>%
+  group_by(place) %>% 
+  slice(1:10) %>% 
+  ggplot(aes(fct_reorder(pub_name, n), n))+
+  geom_col()+
+  coord_flip()+
+  facet_wrap(~place, scale = "free")+
+  labs(x = "", y = "", caption = "https://pudding.cool/2019/10/pubs/")
+```
+
+What if you want to apply ```summarise()``` or ```mutate()``` only to some columns? For that, there are functions ```summarise_at()``` or ```mutate_at()```. For instance, let's compute the mean for every column of the dataset ```iris``` that start with the word *Sepal*.
+
+```{r}
+iris %>% 
+  head()
+```
+
+```{r}
+iris %>% 
+  summarise_at(vars(starts_with("Sepal")), mean)
+```
+
+```{r}
+iris %>% 
+  summarise_at(vars(matches("Sepal")), mean) #corresponds to a regular expression
+```
+
+```{r}
+iris %>% 
+  summarise_at(vars(ends_with("Width")), mean)
+```
+
+```{r}
+diamonds %>% 
+  summarise_at(vars(one_of(c("depth", "price", "carat"))), mean)
+```
+
+```{r}
+diamonds %>% 
+  summarise_if(is.numeric, mean)
+```
+
+More examples:
+
+```{r}
+diamonds
+
+diamonds %>% 
+  mutate_at(vars(one_of(c("depth", "price", "carat"))), sqrt)
+
+diamonds %>% 
+  mutate_if(is.numeric, sqrt)
+```
+
+You can also use your own function:
+
+```{r}
+iris %>% 
+  summarise_at(vars(matches("Sepal")), function(x){mean(x)*min(x)})
+```
+
+Solution to problem 1
+
+```{r}
+which_is_longer <- function(x,y){
+  if(stringr::str_count(x, "[A-zА-я]")>stringr::str_count(y, "[A-zА-я]")){
+    "the first word is longer"
+  } else if (stringr::str_count(x, "[A-zА-я]")<stringr::str_count(y, "[A-zА-я]")){
+    "the second word is longer"
+  } else {
+  "the words are of the same length"
+  }
+}
+
+which_is_longer("роза", "цветок")
+which_is_longer("олень", "палка")
+which_is_longer("воробей", "птица")
+which_is_longer("boat", "sea")
+```

@@ -1,0 +1,197 @@
+## Functions 0
+
+```
+library(tidyverse)
+```
+### 1. Creating functions
+
+```{r}
+pow <- function(x, p) {
+  power <- x ^ p
+  return(power)
+}
+pow(3, 2)
+```
+
+If there is no ```return()```, the last computed value is returned:
+
+```{r}
+pow <- function(x, p) {
+  x ^ p
+}
+pow(3, 2)
+```
+
+What is the problem here?
+
+```{r}
+pow <- function(x, p) {
+  power <- x ^ p 
+}
+pow(3, 2) 
+```
+
+If the function is short, you don't have to use {}:
+
+```{r}
+pow <- function(x, p) x ^ p
+pow(3, 2) 
+```
+
+Default parameters:
+
+```{r}
+pow <- function(x, p = 2) x ^ p
+pow(3) 
+pow(3, 3)
+```
+
+Lazy evaluations:
+
+R is a procrastinator, it reads the the data only when it needs it for computation purposes, this means that there won't be an error if we execute the following piece of code:
+
+```{r}
+pow <- function(x, p = 2, we_will_not_use_this_parameter) x ^ p
+pow(x = 3)
+```
+
+### 2. Adequacy (sanity check) 
+
+We need to make sure that our functions don't produce results for inadequate entry data. For instance, to avoid situations [like that](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7).
+
+What does ```imt()``` do?
+
+```{r}
+imt <- function(weight, height) weight / height ^ 2
+```
+
+Testing the function:
+
+```{r}
+w <- c(60, 80, 120)
+h <- c(1.6, 1.7, 1.8)
+imt(weight = w, height = h)
+```
+
+Do you foresee any problems with the use of this function?
+
+```{r}
+imt <- function(weight, height) {
+  if (any(height > 3)) warning("The height value is bigger than 3: perhaps, the height value is in cm, not in m (as required)!\n")
+  weight / height ^ 2
+}
+imt(52, 167)
+```
+
+What about zero values for weight and height?
+
+```{r}
+imt <- function(weight, height) {
+  if (any(weight <= 0 | height <= 0)) stop("Body mass index cannot be computed for negative or zero values")
+  if (any(height > 3)) warning("The height value is bigger than 3: perhaps, the height value is in cm, not in m (as required)!\n")
+  weight / height ^ 2
+}
+```
+
+[Please look at the debugging techniques](https://adv-r.hadley.nz/debugging.html)
+
+### 3. When and why do we need functions?
+
++ [Rule of three](https://en.wikipedia.org/wiki/Rule_of_three_(computer_programming))
++ not to repeat the same
++ a way of abstraction
+
+### 4. Functions as objects of the first order
+
++ Almost eveything in R is a function, even {
+
++ Functions are objects of the first order, which means that you do with functions many things that you can do with vectors, dataframes etc.:
+
+```{r}
+list(mean, min, `{`)
+```
+
++ Recursion: we can use functions are arguments for other functions, we can save functions as variables
+
++ The same will be true of Python as well (barring the syntactic conventions)
+
+### 5. The family of ```apply()``` functions
+
++ Working with a matrix
+
+```{r}
+A <- matrix(1:12, 3, 4)
+A
+```
+
+The syntax: ```apply(X, MARGIN, FUN, ...)```, where X — the data, MARGIN is 1 (for rows), 2 (for columns), c(1,2) for rows and columns (= for each element), and FUN — a function that you would like to apply
+
+```{r}
+apply(A, 1, sum) #sum for every row #note that a function apply applies to a function sum
+apply(A, 2, sum) #sum for every column
+apply(A, c(1,2), sum) #sum of every element -- does not make much sense 
+```
+
+Additional arguments can be listed:
+
+```{r}
+apply(A, 1, sum, na.rm = TRUE)
+apply(A, 1, weighted.mean, w = c(0.2, 0.4, 0.3, 0.1)) 
+```
+
++ Anonymous functions
+
+Functions that are used one time and do not have a name
+
+```{r}
+apply(A, 1, function(x) sum((x - mean(x))^2)) #sd from the mean by row
+apply(A, 2, function(x) sum((x - mean(x))^2)) #sd from the mean by column
+apply(A, c(1, 2), function(x) sum((x - mean(x))^2)) #diviation from each value, i.e., zero
+apply(A, 1, function(whatevername) sum((whatevername - mean(whatevername))^2)) #you can name the variable in any way you want
+```
+
++ Other functions of the family
+
+  + ```lapply``` -- apply to every element of a list
+  
+```{r}
+some_list <- list(some = 1:10, list = letters)
+lapply(some_list, length)
+```
+
+  + ```sapply()``` - a version of ```lapply()``` that tries to return the result in a vector or a matrix
+
+```{r}  
+sapply(some_list, length)
+```
+
+  + applying ```sapply()``` to a vector:
+  
+```{r}
+sapply(1:10, sqrt)
+sqrt(1:10)
+```
+
+  + we can use ```lapply()``` and ```sapply()``` for dataframes, because a dataframe is basically a list of vectors of the same length, the functions will iterate through columns:
+  
+```{r}
+heroes <- read.csv("https://raw.githubusercontent.com/dashapopova/Intro-to-R/main/week4/heroes_information.csv", 
+                   na.strings = c("-", "-99"))
+sapply(heroes, class)
+```
+
+  + replicate() -- to replicate an operation
+  
+```{r}
+samp <- rlnorm(30)
+hist(samp)
+```
+
+```{r}
+sampdist <- replicate(1000, mean(rlnorm(30)))
+hist(sampdist)
+```
+
+[A tutorial](https://www.datacamp.com/community/tutorials/r-tutorial-apply-family)
+
+

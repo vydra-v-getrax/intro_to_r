@@ -1,0 +1,152 @@
+## Statements
+
+```
+library(tidyverse)
+```
+### 1. ```if, else, else if```
+
+```
+if (condition) statement
+```
+
+```{r}
+number <- 1
+if (number > 0) "positive number"
+```
+
+Use {} for expressions with multiple lines:
+
+```{r}
+number <- 1
+if (number > 0) {
+  "positive number"
+}
+```
+
+If the condition is not true:
+
+```
+if (condition) statement else statement
+```
+
+```{r}
+number <- -3
+if (number > 0) {
+  "positive number"
+} else {
+  "negative number or zero"
+}
+```
+
+Multiple conditions:
+
+```{r}
+number <- 0
+if (number > 0) {
+  "positive number"
+} else if (number < 0){
+  "negative number"
+} else {
+  "zero"
+}
+```
+
+What if we want to apply the condition to a vector?
+
+```{r}
+number <- -2:2
+if (number > 0) {
+  "positive number"
+} else if (number < 0){
+  "negative number"
+} else {
+  "zero"
+}
+```
+
+Not a success! How can we fix this?
+
+### 2. ```for``` loops
+
+```
+for(variable in sequence) statement
+```
+
+```{r}
+for (i in number) {
+  if (i > 0) {
+    print("positive number")
+  } else if (i < 0) {
+    print("negative number")
+  } else {
+    print("zero")
+  }
+}
+```
+
+For-loops are not commonly used, because there are alternative ways to do the same.
+
++ Vectorized functions:
+
+```
+cumsum(1:10) #cumulative sum
+```
+
++ Functions from the ```apply()``` family that we have seen before.
+
+When you use for-loops, control the length of the object to speed up the computation:
+
+```{r}
+number_descriptions <- character(length(number)) #creating a string vector with the same length as the length of the initial vector
+for (i in 1:length(number)) {
+  if (number[i] > 0) {
+    number_descriptions[i] <- "positive number"
+  } else if (number[i] < 0) {
+    number_descriptions[i] <- "negative number"
+  } else {
+    number_descriptions[i] <- "zero"
+  }
+}
+number_descriptions
+```
+
+### 3. Vectorized conditional statements: ```ifelse()``` and ```dplyr::case_when()```
+
+```
+ifelse(number > 0, "positive number", "negative number or zero")
+```
+
+More speedy alternatives:
+
++ dplyr package
+
+```{r}
+dplyr::if_else(number > 0, "positive number", "negative number or zero")
+```
+
++ data.table package
+
+```{r}
+data.table::fifelse(number > 0, "positive number", "negative number or zero")
+```
+Multiple conditions:
+
+```{r}
+ifelse(number > 0,
+       "positive number",
+       ifelse(number < 0, "negative number", "zero"))
+```
+
+```{r}
+dplyr::case_when(
+  number > 0 ~ "positive number",
+  number < 0 ~ "negative number",
+  number == 0 ~ "zero")
+```
+
+```{r}
+data.table::fcase(
+  number > 0, "positive number",
+  number < 0, "negative number",
+  number == 0, "zero")
+```
