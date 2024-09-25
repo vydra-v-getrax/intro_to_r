@@ -55,7 +55,9 @@ All assignments should be submitted via email.
 </tr>
 <tr>
   <td>26.09. (room 509)</td>
-  <td></td>
+  <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week4/functions0_upd.Rmd">functions0_upd.Rmd</a>
+  <br><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week4/conditionsANDloops.Rmd">conditionsANDloops</a>
+  <br><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week4/functions_upd.Rmd">functions_upd.Rmd</a></td>
   <td>Quiz 1</td>
   <td>03.10</td>
    <td></td>
