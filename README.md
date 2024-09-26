@@ -58,7 +58,7 @@ All assignments should be submitted via email.
   <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week%204//functions0_upd.Rmd">functions0_upd.Rmd</a>
   <br><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week%204//conditionsANDloops.Rmd">conditionsANDloops</a>
   <br><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week%204//functions_upd.Rmd">functions_upd.Rmd</a></td>
-  <td>Quiz 1</td>
+  <td><a href=https://docs.google.com/forms/d/e/1FAIpQLSdw0sgXh3WB5VhoEyLUvbIYbLuOYrhRP3mO4P24ZXhvI8zbdg/viewform>Quiz 1</a></td>
   <td>03.10</td>
    <td></td>
 </tr>
