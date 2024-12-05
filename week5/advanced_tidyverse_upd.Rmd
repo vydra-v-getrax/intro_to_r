@@ -1,0 +1,290 @@
+### Advanced ```tidyverse```
+
+#### 1. Joining multiple dataframes
+
++ conjoining two structurally similar dataframes: ```bind_rows(), bind_cols()```
+
+```{r}
+library("dplyr")
+heroes <- read.csv("https://raw.githubusercontent.com/vydra-v-getrax/intro_to_r/refs/heads/main/week%204/heroes_information.csv", na = c("-","-99"))
+```
+
+```{r}
+dc <- heroes %>%
+  filter(Publisher == "DC Comics") %>%
+  group_by(Gender) %>%
+  summarise(weight_mean = mean(Weight, na.rm = TRUE))
+dc
+```
+
+```{r}
+marvel <- heroes %>%
+  filter(Publisher == "Marvel Comics") %>%
+  group_by(Gender) %>%
+  summarise(weight_mean = mean(Weight, na.rm = TRUE))
+marvel
+```
+
+```{r}
+other_publishers <- heroes %>%
+  filter(!(Publisher %in% c("DC Comics","Marvel Comics"))) %>%
+  group_by(Gender) %>%
+  summarise(weight_mean = mean(Weight, na.rm = TRUE))
+other_publishers
+```
+
+Combine by rows (the names of the columns should be the same):
+
+```{r}
+bind_rows(dc, marvel)
+```
+
+Combine by columns:
+
+```{r}
+bind_cols(dc, marvel)
+```
+
+Multiple tibbles:
+
+```{r}
+bind_rows(dc, marvel, other_publishers)
+
+
+heroes_list_of_df <- list(DC = dc, 
+                          Marvel = marvel, 
+                          Other = other_publishers)
+bind_rows(heroes_list_of_df)
+
+bind_rows(heroes_list_of_df, .id = "Publisher")
+```
+
++ Relational data: ```*_join()```
+
+```{r}
+band_members
+
+band_instruments
+```
+
+These two tibbles have a column with the same name, which can be used to join the two structures. Such column is called the key. The key has to identify the observations uniquely.
+
+```{r}
+band_members %>%
+  left_join(band_instruments)
+
+band_members %>%
+  left_join(band_instruments, by = "name")
+
+band_members %>%
+  left_join(band_instruments2, by = c("name" = "artist"))
+
+band_members %>%
+  right_join(band_instruments)
+
+band_members %>%
+  full_join(band_instruments)
+
+band_members %>%
+  inner_join(band_instruments)
+
+band_members %>%
+  semi_join(band_instruments)
+
+band_members %>%
+  anti_join(band_instruments)
+```
+#### 2. Tidy data: ```tidyr::pivot_longer()```, ```tidyr::pivot_wider()```
+
+Wide format:
+
+```
+|student|before Intro to R|after intro to R|
+|Kirill|65|63|
+|Ania|54|51|
+|Anastasia|54|52|
+```
+Long format:
+
+```
+|student|timepoint|weight (kg)|
+|Kirill|before Intro to R|65|
+|Ania|before Intro to R|54|
+|Anastasia|before Intro to R|54|
+|Kirill|after Intro to R|63|
+|Ania|after Intro to R|51|
+|Anastasia|after Intro to R|52|
+```
+
+
++ ```tidyr::pivot_longer()```
+
++ ```tidyr::pivot_wider()```
+
+```{r}
+new_diet <- tibble(
+  student = c("Kirill", "Ania", "Anastasia"),
+  before_r_course = c(65, 54, 54),
+  after_r_course = c(63, 51, 52)
+)
+new_diet
+```
+
+Let's convert wide format into a longer format:
+
+```{r}
+new_diet %>%
+  tidyr::pivot_longer(cols = before_r_course:after_r_course,
+               names_to = "measurement_time", 
+               values_to = "weight_kg")
+```
+
+And back:
+
+```{r}
+new_diet %>%
+  tidyr::pivot_longer(cols = before_r_course:after_r_course,
+               names_to = "measurement_time", 
+               values_to = "weight_kg") %>%
+  tidyr::pivot_wider(names_from = "measurement_time",
+              values_from = "weight_kg")
+```
+
+#### 3. Transforming multiple columns: ```dplyr::across()```
+
+```{r}
+#install.packages("tidyr")
+library("tidyr")
+```
+
+```{r}
+heroes %>%
+  group_by(Gender) %>%
+  summarise(height = mean(Height, na.rm = TRUE),
+            weight = mean(Weight, na.rm = TRUE))
+```
+
+```{r}
+heroes %>%
+  group_by(Gender) %>%
+  summarise(across(c(Height,Weight), mean))
+```
+
+```{r}
+heroes %>%
+  group_by(Gender) %>%
+  summarise(across(c(Height, Weight), mean, na.rm = TRUE))
+```
+
+```{r}
+heroes %>%
+  drop_na(Height, Weight) %>%
+  group_by(Gender) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE))
+```
+
+```{r}
+heroes %>%
+  group_by(Gender) %>%
+  summarise(across(where(is.character), 
+                   function(x) mean(nchar(x), na.rm = TRUE)))
+```
+
+```{r}
+heroes %>%
+  group_by(Gender) %>%
+  summarise(across(where(is.numeric), mean, na.rm = TRUE),
+            across(where(is.character), 
+                   function(x) mean(nchar(x), na.rm = TRUE)))
+```
+
+```{r}
+heroes %>%
+  group_by(Gender) %>%
+  summarise(across(c(Height, Weight), 
+                   list(minimum = min,
+                        average = mean,
+                        maximum = max), 
+                   na.rm = TRUE))
+```
+
+```{r}
+heroes %>%
+  group_by(Gender) %>%
+  summarise(across(
+    c(Height, Weight),
+    list(
+      min = function(x) min(x, na.rm = TRUE),
+      mean = function(x) mean(x, na.rm = TRUE),
+      max = function(x) max(x, na.rm = TRUE),
+      na_n = function(x, ...) sum(is.na(x)))
+    )
+    )
+```
+
+```{r}
+heroes %>%
+  mutate(across(where(is.character), as.factor))
+```
+
+```{r}
+heroes %>%
+  count(across(where(function(x) n_distinct(x) <= 6)))
+```
+
+4. #### Functional programming: ```purrr```
+
+```{r}
+lapply(heroes, class)
+```
+
+```{r}
+library(purrr)
+map(heroes, class)
+
+heroes %>%
+  map(class)
+
+heroes %>%
+  map_chr(class)
+
+heroes %>%
+  map_df(class)
+
+heroes %>%
+  map_int(function(x) sum(is.na(x)))
+
+heroes %>%
+  map_int(~sum(is.na(.))) #function(arg) is replaced by ~, аnd arg is replaced by .
+```
+
+#### 5. List columns and nesting: ```nest()```
+
+```{r}
+library(tidyr)
+heroes %>%
+  nest(!Gender)
+
+heroes %>%
+  group_by(Gender) %>%
+  nest()
+
+heroes %>%
+  group_by(Gender) %>%
+  nest() %>%
+  mutate(dim = map(data, dim))
+
+heroes %>%
+  group_by(Gender) %>%
+  nest() %>%
+  mutate(dim = map(data, dim)) %>%
+  unnest(dim)
+
+heroes %>%
+  group_by(Gender) %>%
+  nest() %>%
+  mutate(dim = map(data, dim)) %>%
+  unnest_wider(dim, names_sep = "_") 
+```
+
+

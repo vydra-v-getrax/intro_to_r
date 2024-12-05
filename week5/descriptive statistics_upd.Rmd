@@ -1,0 +1,342 @@
+### Descriptive statistics
+
+#### 1. Descriptive statistics
+
+Sample --> Sample statistics
+
+Inferential statistics: sample statistics --> population parameters --> population
+
+#### 2. Types of scales
+
++ Nominal Scale: political parties, ids
++ Ordinal Scale: A < B < C; rarely < sometimes < often
++ Interval Scale: 20C - 10C = 30C - 20C
++ Ratio Scale: 10kg...
+
+#### 3. Averages
+
+```{r}
+library("dplyr")
+library("tidyr")
+heroes <- read.csv("https://raw.githubusercontent.com/dashapopova/Intro-to-R/main/week4/heroes_information.csv", na = c("-","-99"))
+weight <- heroes %>%
+  drop_na(Weight) %>%
+  pull(Weight)
+```
+
++ Arithmetic mean
+
+```{r}
+mean(weight)
+```
+
++ Median
+
+```{r}
+median(weight)
+```
+
+```{r}
+mean(c(weight, 9000))
+median(c(weight, 9000))
+```
+
++ Trimmed mean
+
+```{r}
+mean(weight, trim = 0.1) #10% on the left and 10% on the right
+
+mean(weight, trim = 0)
+
+mean(weight, trim = 0.5)
+```
+
++ Mode
+
+```{r}
+heroes %>%
+  count(Gender, sort = TRUE)
+```
+
+#### 4. Variability
+
++ Range
+
+```{r}
+range(weight)
+
+diff(range(weight))
+```
+
++ Variance
+
+```{r}
+var(weight)
+```
+
++ Standard deviation
+
+```{r}
+sd(weight)
+
+sqrt(var(weight))
+```
+
++ Median absolute deviation
+
+```{r}
+mad(weight)
+```
+
++ Everything at once!
+
+```{r}
+summary(weight)
+```
+
+```{r}
+install.packages("psych")
+library("psych")
+
+psych::describe(weight)
+
+heroes %>%
+  group_by(Gender) %>%
+  summarise(describe(Weight))
+```
+
+```{r}
+install.packages("skimr")
+library("skimr")
+
+skimr::skim(heroes)
+
+heroes %>%
+  skimr::skim(ends_with("color"))
+
+heroes %>%
+  group_by(Gender) %>%
+  skimr::skim(ends_with("color"))
+```
+
++ A plot
+
+```{r}
+install.packages("ggplot2")
+library("ggplot2")
+```
+
+```{r}
+almost_empty_ggplot <- ggplot(data = heroes)
+almost_empty_ggplot
+
+ggplot(data = heroes) +
+  geom_bar(aes(x = Gender, fill = Gender))
+
+ggplot(data = heroes) +
+  geom_bar(aes(x = "", fill = Gender))
+
+ggplot(data = heroes) +
+  geom_bar(aes(x = "", fill = Gender), width = .2)
+
+ggplot(data = heroes) +
+  geom_bar(aes(x = "", fill = Gender)) +
+  coord_polar(theta = "y")
+
+ggplot(data = heroes) +
+  geom_bar(aes(x = "", fill = Gender)) +
+  coord_polar(theta = "y") +
+  theme_void() +
+  labs(title = "Gender distributions for superheroes")
+```
+
+```{r}
+heroes %>%
+  mutate(Publisher = ifelse(Publisher %in% c("Marvel Comics", "DC Comics"), 
+                            Publisher,
+                            "Other publishers")) %>%
+  ggplot(aes(x = Publisher)) +
+  geom_bar()
+
+heroes %>%
+  mutate(Publisher = ifelse(Publisher %in% c("Marvel Comics", "DC Comics"), 
+                            Publisher,
+                            "Other publishers")) %>%
+  ggplot(aes(x = Publisher, fill = Gender)) +
+  geom_bar()
+
+heroes %>%
+  mutate(Publisher = ifelse(Publisher %in% c("Marvel Comics", "DC Comics"), 
+                            Publisher,
+                            "Other publishers")) %>%
+  ggplot(aes(x = Publisher, fill = Gender)) +
+  geom_bar(position = "fill")
+
+heroes %>%
+  mutate(Publisher = ifelse(Publisher %in% c("Marvel Comics", "DC Comics"), 
+                            Publisher,
+                            "Other publishers")) %>%
+  ggplot(aes(x = Publisher, fill = Gender)) +
+  geom_bar(position = "fill") +
+  labs(title = "Distribution of superheroes by gender and by publisher",
+       x = "Publisher",
+       y = "Number of superheroes")+
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal()
+
+heroes %>%
+  ggplot(aes(x = Height, y = Weight)) +
+  geom_point()
+
+heroes %>%
+  filter(Weight < 700 & Height < 400) %>%
+  ggplot(aes(x = Height, y = Weight)) +
+  geom_point()
+
+heroes %>%
+  filter(Weight < 700 & Height < 400) %>%
+  ggplot(aes(x = Height, y = Weight)) +
+  geom_point(aes(colour = Gender), alpha = 0.5)
+
+heroes %>%
+  filter(Weight < 700 & Height < 400) %>%
+  ggplot(aes(x = Height, y = Weight)) +
+  geom_point(aes(colour = Gender), alpha = 0.5) +
+  coord_fixed()
+
+heroes %>%
+  mutate(Publisher = ifelse(Publisher %in% c("Marvel Comics", "DC Comics"), 
+                            Publisher,
+                            "Other publishers")) %>%
+  filter(Weight < 700 & Height < 400) %>%
+  ggplot(aes(x = Height, y = Weight)) +
+  geom_point(aes(colour = Gender), alpha = 0.5) +
+  coord_fixed() +
+  facet_wrap(~Publisher)
+
+heroes %>%
+  mutate(Publisher = ifelse(Publisher %in% c("Marvel Comics", "DC Comics"), 
+                            Publisher,
+                            "Other publishers")) %>%
+  filter(Weight < 700 & Height < 400) %>%
+  ggplot(aes(x = Height, y = Weight)) +
+  geom_point(aes(colour = Gender), alpha = 0.5) +
+  coord_fixed() +
+  facet_wrap(~Publisher)+
+  theme_linedraw()
+```
+
+#### 5. Practice
+
+Create a tibble web_creators with superheroes who can create webs:
+
+```{r}
+#install.packages("tidyverse")
+library("tidyverse")
+powers <- read_csv("https://raw.githubusercontent.com/Pozdniakov/tidy_stats/master/data/super_hero_powers.csv")
+```
+
+```{r}
+powers_web <- powers %>%
+  select(hero_names, `Web Creation`)
+web_creators <- left_join(heroes, powers_web, by = c("name" = "hero_names")) %>%
+  filter(`Web Creation`)
+web_creators
+```
+
+All the heroes that are present in the heroes, but not in powers:
+
+```{r}
+anti_join(heroes, powers, by = c("name" = "hero_names")) %>%
+  pull(name)
+```
+
+All the heroes that are present in powers, but not in heroes:
+
+```{r}
+anti_join(powers, heroes, by = c("hero_names" = "name")) %>%
+  pull(hero_names)
+```
+
+Create a tibble weight:
+
+```{r}
+heroes_weight <- heroes %>%
+  filter(Publisher %in% c("DC Comics", "Marvel Comics")) %>%
+  group_by(Gender, Publisher) %>%
+  summarise(weight_mean = mean(Weight, na.rm = TRUE)) %>%
+  drop_na()
+heroes_weight 
+```
+
+Create a wide tibble:
+
+```{r}
+heroes_weight %>%
+  pivot_wider(names_from = "Publisher", values_from = "weight_mean")
+```
+
+Then back to a long tibble:
+
+```{r}
+heroes_weight %>%
+  pivot_wider(names_from = "Publisher", values_from = "weight_mean") %>%
+  pivot_longer(cols = !Gender,
+               names_to = "Publisher",
+               values_to = "weight_mean")
+```
+
+Make powers a long tibble with three columns: hero_names, power (the name of the superpower) and has (whether the hero has a superpower or not):
+
+```{r}
+powers %>%
+  pivot_longer(cols = !hero_names,
+               names_to = "power",
+               values_to = "has")
+```
+Make tibble powers wide, but with a new structure: each row corresponds to a superpower and each column corresponds to a superhero (except for the first column -- the name of the superpower):
+
+```{r}
+powers %>%
+  pivot_longer(cols = !hero_names,
+               names_to = "power",
+               values_to = "has") %>%
+  pivot_wider(names_from = hero_names,
+              values_from = has)
+```
+
+Count NAs in each column grouping by gender:
+
+```{r}
+na_n <- function(x) sum(is.na(x))
+heroes %>%
+  group_by(Gender) %>%
+  summarise(across(everything(), na_n))
+```
+
+```{r}
+na_n <- function(x) sum(is.na(x))
+heroes %>%
+  group_by(Gender) %>%
+  summarise(across(ends_with("color"), na_n))
+
+longest_char <- function(x) x[which.max(nchar(x))]
+heroes %>%
+  group_by(Gender) %>%
+  summarise(across(where(is.character), longest_char))
+
+higher_than_average <- function(x) ifelse(x > mean(x, na.rm = TRUE),
+                                          "выше среднего",
+                                          "ниже среднего")
+heroes %>%
+  mutate(across(c(Height, Weight), 
+                   higher_than_average))
+
+heroes %>%
+  group_by(Gender) %>%
+  mutate(across(c(Height, Weight), 
+                   higher_than_average)) %>%
+  ungroup() %>%
+  mutate(across(c(Height, Weight), 
+                   ~paste(., "по", Gender)))
+```
