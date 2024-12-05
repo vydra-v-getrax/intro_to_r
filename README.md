@@ -60,6 +60,13 @@ All assignments should be submitted via email.
   <br><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week%204//functions_upd.Rmd">functions_upd.Rmd</a></td>
   <td><a href=https://docs.google.com/forms/d/e/1FAIpQLSdw0sgXh3WB5VhoEyLUvbIYbLuOYrhRP3mO4P24ZXhvI8zbdg/viewform>Quiz 1</a></td>
   <td>03.10</td>
-   <td></td>
+  <td></td>
+</tr>
+  <tr>
+  <td>05.12 (room 509)</td>
+  <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week5">More tidyverse</a></td>
+  <td><a href=https://forms.gle/TDTux9pDnzBmV4r37>Quiz 2</a></td>
+  <td>12.12</td>
+  <td></td>
 </tr>
 </table>
