@@ -1,0 +1,103 @@
+### Working with geodata
+
+```{r}
+install.packages("leaflet")
+install.packages("tidyverse")
+library("tidyverse")
+library("leaflet")
+```
+
+[Cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/leaflet.pdf)
+
+```{r}
+unwelcomed <- read_csv("https://raw.githubusercontent.com/agricolamz/DS_for_DH/master/data/death_of_migrants_and_refugees_from_the_Unwelcomed_project.csv")
+
+unwelcomed %>% 
+  leaflet() %>% 
+  addCircles(lng = ~lon, 
+             lat = ~lat)
+
+unwelcomed %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addCircles(lng = ~lon,
+             lat = ~lat)
+
+pal_cat <- colorFactor("Set3", domain = unwelcomed$collapsed_cause)
+pal_cat(unwelcomed$collapsed_cause[1])
+
+RColorBrewer::display.brewer.all()
+
+unwelcomed %>% 
+  filter(str_detect(date, "2014")) %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addCircles(lng = ~lon,
+             lat = ~lat,
+             label = ~total_death_missing, 
+             color  = ~pal_cat(collapsed_cause), 
+             opacity = 0.9,
+             popup = ~cause_of_death) %>%  
+  addLegend(pal = pal_cat,
+            values = ~collapsed_cause,
+            title = "")
+
+unwelcomed %>% 
+  filter(str_detect(date, "2014")) %>% 
+  leaflet() %>% 
+  addProviderTiles("Stadia.StamenWatercolor") %>% 
+  addCircles(lng = ~lon,
+             lat = ~lat,
+             label = ~total_death_missing, 
+             color  = ~pal_cat(collapsed_cause), 
+             opacity = 0.9,
+             popup = ~cause_of_death) %>%  
+  addLegend(pal = pal_cat,
+            values = ~collapsed_cause,
+            title = "")
+```
+
+https://leaflet-extras.github.io/leaflet-providers/preview/index.html
+
+We can save a map into a variable:
+
+```{r}
+unwelcomed %>% 
+  filter(str_detect(date, "2014")) %>% 
+  leaflet() %>% 
+  addProviderTiles("Stadia.StamenTerrain") %>% 
+  addCircles(lng = ~lon,
+             lat = ~lat,
+             label = ~total_death_missing, # пусть возникает подпись с количеством
+             color  = ~pal_cat(collapsed_cause), # это обобщенная причина
+             opacity = 0.9,
+             popup = ~cause_of_death) %>%  # а это конкретная причина, появляется при клике мышкой
+  addLegend(pal = pal_cat,
+            values = ~collapsed_cause,
+            title = "2014") ->
+  m_2014
+
+unwelcomed %>% 
+  filter(str_detect(date, "2015")) %>% 
+  leaflet() %>% 
+  addProviderTiles("Stadia.StamenTerrain") %>% 
+  addCircles(lng = ~lon,
+             lat = ~lat,
+             label = ~total_death_missing, # пусть возникает подпись с количеством
+             color  = ~pal_cat(collapsed_cause), # это обобщенная причина
+             opacity = 0.9,
+             popup = ~cause_of_death) %>%  # а это конкретная причина, появляется при клике мышкой
+  addLegend(pal = pal_cat,
+            values = ~collapsed_cause,
+            title = "2015") ->
+  m_2015
+```
+
+```{r}
+install.packages("leafsync")
+library("leafsync")
+```
+
+```{r}
+sync(m_2014, m_2015)
+```
