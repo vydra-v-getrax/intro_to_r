@@ -1,0 +1,174 @@
+### Working with texts
+
+```{r}
+library(tidyverse)
+```
+
+#### 1. Uploading a text
+
+The package ```readr``` (part of ```tidyverse```) has a function for reading texts: ```read_lines()```. 
+
+```{r}
+t <- read_lines("https://raw.githubusercontent.com/agricolamz/2020_HSE_DPO/master/data/Chang.txt")
+head(t)
+
+t2 <- str_c(t, collapse = " ")
+length(t2)
+
+str_length(t2)
+
+str_c(c("... она запо-", "лучила ..."), collapse = " ")
+```
+
+#### 2. Package ```gutenbergr```
+
+```{r}
+install.packages("gutenbergr")
+library(gutenbergr)
+```
+
+```{r}
+str(gutenberg_metadata)
+
+gutenberg_metadata %>% 
+  count(language, sort = TRUE)
+
+gutenberg_metadata %>% 
+  count(author, sort = TRUE)
+
+gutenberg_metadata %>% 
+  filter(author == "Austen, Jane") %>% 
+  distinct(gutenberg_id, title)
+
+emma <- gutenberg_download(158)
+
+emma
+
+books <- gutenberg_download(c(158, 946), meta_fields = "title")
+books
+
+books %>% 
+  count(title)
+```
+
+#### 3. Library ```tidytext```
+
+Can we count the words?
+
+Yes, we can: ```tidytext``` has a function ```unnest_tokens()```.
+
+```{r}
+install.packages("tidytext")
+library(tidytext)
+```
+
+```{r}
+books %>% 
+  unnest_tokens(output = "word", input = text)
+
+books %>% 
+  unnest_tokens(output = "word", input = text) %>% 
+  count(title, word, sort = TRUE)
+
+books %>% 
+  unnest_tokens(word, text) %>% 
+  count(title, word, sort = TRUE) %>% 
+  anti_join(stop_words)
+
+books %>% 
+  unnest_tokens(word, text) %>% 
+  count(word, sort = TRUE) %>% 
+  slice(1:20) %>% 
+  ggplot(aes(n, word))+
+  geom_col()
+
+books %>% 
+  unnest_tokens(word, text) %>% 
+  count(word, sort = TRUE) %>% 
+  slice(1:20) %>% 
+  mutate(word = fct_reorder(word, n)) %>% 
+  ggplot(aes(n, word))+
+  geom_col()
+
+#not good!
+books %>% 
+  unnest_tokens(word, text) %>% 
+  count(title, word, sort = TRUE) %>% 
+  group_by(title) %>% 
+  slice(1:20) %>% 
+  ungroup() %>%
+  mutate(word = fct_reorder(word, n)) %>% 
+  ggplot(aes(n, word))+
+  geom_col()+
+  facet_wrap(~title, scales = "free")
+
+books %>% 
+  unnest_tokens(word, text) %>% 
+  count(title, word, sort = TRUE) %>% 
+  group_by(title) %>% 
+  slice(1:20) %>% 
+  ungroup() %>%
+  mutate(word = reorder_within(x = word, by = n, within = title)) %>% 
+  ggplot(aes(n, word))+
+  geom_col()+
+  facet_wrap(~title, scales = "free")
+
+books %>% 
+  unnest_tokens(word, text) %>% 
+  count(title, word, sort = TRUE) %>% 
+  group_by(title) %>% 
+  slice(1:20) %>% 
+  ungroup() %>%
+  mutate(word = reorder_within(x = word, by = n, within = title)) %>% 
+  ggplot(aes(n, word))+
+  geom_col()+
+  facet_wrap(~title, scales = "free")+
+  scale_y_reordered()
+
+books %>% 
+  unnest_tokens(word, text, token = "ngrams", n = 2)
+
+books %>% 
+  filter(title == "Emma") %>% 
+  unnest_tokens(word, text) %>% 
+  mutate(narrative_time = 1:n()) %>% 
+  filter(str_detect(word, "knightley$|woodhouse$|churchill$|fairfax$")) %>%  
+  ggplot()+
+      geom_vline(aes(xintercept = narrative_time))+
+  facet_wrap(~word, ncol = 1)
+```
+
+#### 4. Package ```stopwords```
+
+```{r}
+install.packages("stopwords")
+library(stopwords)
+stopwords("ru")
+
+stopwords_getsources()
+
+map(stopwords_getsources(), stopwords_getlanguages)
+
+length(stopwords("ru", source = "snowball"))
+
+length(stopwords("ru", source = "stopwords-iso"))
+```
+
+#### 5. Package ```udpipe```
+
+[A tutorial](https://bnosac.github.io/udpipe/docs/doc1.html)
+
+```
+install.packages("udpipe")
+library(udpipe)
+
+enmodel <- udpipe_download_model(language = "english")
+
+udpipe("The want of Miss Taylor would be felt every hour of every day.", object = enmodel)
+
+rumodel <- udpipe_download_model(language = "russian-syntagrus")
+
+udpipe("Жила-была на свете крыса в морском порту Вальпараисо, на складе мяса и маиса, какао и вина.", object = rumodel)
+
+udpipe("Жила-была на свете крыса в морском порту Вальпараисо, на складе мяса и маиса, какао и вина.", object = "russian-syntagrus-ud-2.4-190531.udpipe")
+```
