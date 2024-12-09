@@ -69,4 +69,32 @@ All assignments should be submitted via email.
   <td>12.12</td>
   <td></td>
 </tr>
+</tr>
+<tr>
+  <td>12.12 (room 509)</td>
+  <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week7">Regexp practice</a></td>
+  <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/assignment2">Assignment 2</a></td>
+  <td>by 12.12 soft, <b>22.12 hard (for the max of 8)</b></td>
+  <td>
+    <a href="https://regexone.com/lesson/introduction_abcs">https://regexone.com/lesson/introduction_abcs</a>
+  </td>
+</tr>
+  <tr>
+  <td>12.12 Online </td>
+  <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week6">Clustering</a></td>
+  <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week6">Practice</a></td>
+  <td>Complete the task from the last section and send by email <b>by 22.12</b>. The task is bonus.</td>
+  <td>
+    <a href=""></a>
+  </td>
+</tr>
+  <tr>
+  <td>17.12 (room 509)</td>
+  <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week8">Geodata</a></td>
+  <td></td>
+  <td></td>
+  <td><a href="https://r4ds.had.co.nz/index.html">https://r4ds.had.co.nz/index.html</a><br>
+<a href="https://www.datamentor.io/r-programming/s3-class/"></a>https://www.datamentor.io/r-programming/s3-class/<br>
+<a href="https://www.cyclismo.org/tutorial/R/s3Classes.html"></a>https://www.cyclismo.org/tutorial/R/s3Classes.html</td>
+</tr>
 </table>
