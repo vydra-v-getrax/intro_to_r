@@ -81,7 +81,7 @@ All assignments should be submitted via email.
 </tr>
   <tr>
   <td>12.12 Online </td>
-  <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week6">Clustering</a></td>
+  <td><a href="https://drive.google.com/file/d/1TYV90P9MA8yXhXs8A6wqELqFR4BfkQbN/view?usp=sharing">Clustering</a></td>
   <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week6">Practice</a></td>
   <td>Complete the task from the last section and send by email <b>by 22.12</b>. The task is bonus.</td>
   <td>
