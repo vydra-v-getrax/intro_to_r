@@ -74,7 +74,7 @@ All assignments should be submitted via email.
   <td>12.12 (room 509)</td>
   <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week7">Regexp practice</a></td>
   <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/assignment2">Assignment 2</a></td>
-  <td>by 12.12 soft, <b>22.12 hard (for the max of 8)</b></td>
+  <td>by 19.12 soft, <b>22.12 hard (for the max of 8)</b></td>
   <td>
     <a href="https://regexone.com/lesson/introduction_abcs">https://regexone.com/lesson/introduction_abcs</a>
   </td>
