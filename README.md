@@ -89,7 +89,7 @@ All assignments should be submitted via email.
   </td>
 </tr>
   <tr>
-  <td>17.12 (room 509)</td>
+  <td>17.12 (online)</td>
   <td><a href="https://github.com/vydra-v-getrax/intro_to_r/blob/main/week8">Geodata</a></td>
   <td></td>
   <td></td>
@@ -97,4 +97,5 @@ All assignments should be submitted via email.
 <a href="https://www.datamentor.io/r-programming/s3-class/"></a>https://www.datamentor.io/r-programming/s3-class/<br>
 <a href="https://www.cyclismo.org/tutorial/R/s3Classes.html"></a>https://www.cyclismo.org/tutorial/R/s3Classes.html</td>
 </tr>
+  
 </table>
