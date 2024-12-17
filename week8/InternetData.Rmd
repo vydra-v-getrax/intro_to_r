@@ -118,8 +118,8 @@ As you can see, adding classes and ids doesn't change how the tags are rendered 
 
 
 ```{r}
-install.packages("tidyverse")
-install.packages("rvest")
+# install.packages("tidyverse")
+# install.packages("rvest")
 library(tidyverse)
 library(rvest)
 ```

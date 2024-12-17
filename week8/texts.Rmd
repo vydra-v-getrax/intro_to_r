@@ -1,6 +1,6 @@
 ### Working with texts
 
-```{r}
+```{r 1}
 library(tidyverse)
 ```
 
@@ -8,7 +8,7 @@ library(tidyverse)
 
 The package ```readr``` (part of ```tidyverse```) has a function for reading texts: ```read_lines()```. 
 
-```{r}
+```{r 2}
 t <- read_lines("https://raw.githubusercontent.com/agricolamz/2020_HSE_DPO/master/data/Chang.txt")
 head(t)
 
@@ -22,12 +22,12 @@ str_c(c("... она запо-", "лучила ..."), collapse = " ")
 
 #### 2. Package ```gutenbergr```
 
-```{r}
-install.packages("gutenbergr")
+```{r 3}
+# install.packages("gutenbergr")
 library(gutenbergr)
 ```
 
-```{r}
+```{r 4}
 str(gutenberg_metadata)
 
 gutenberg_metadata %>% 
@@ -57,12 +57,12 @@ Can we count the words?
 
 Yes, we can: ```tidytext``` has a function ```unnest_tokens()```.
 
-```{r}
-install.packages("tidytext")
+```{r 5}
+# install.packages("tidytext")
 library(tidytext)
 ```
 
-```{r}
+```{r 6}
 books %>% 
   unnest_tokens(output = "word", input = text)
 
@@ -90,41 +90,17 @@ books %>%
   ggplot(aes(n, word))+
   geom_col()
 
-#not good!
-books %>% 
-  unnest_tokens(word, text) %>% 
-  count(title, word, sort = TRUE) %>% 
-  group_by(title) %>% 
-  slice(1:20) %>% 
-  ungroup() %>%
-  mutate(word = fct_reorder(word, n)) %>% 
-  ggplot(aes(n, word))+
-  geom_col()+
-  facet_wrap(~title, scales = "free")
 
-books %>% 
-  unnest_tokens(word, text) %>% 
-  count(title, word, sort = TRUE) %>% 
-  group_by(title) %>% 
-  slice(1:20) %>% 
-  ungroup() %>%
-  mutate(word = reorder_within(x = word, by = n, within = title)) %>% 
-  ggplot(aes(n, word))+
-  geom_col()+
-  facet_wrap(~title, scales = "free")
+```
 
-books %>% 
-  unnest_tokens(word, text) %>% 
-  count(title, word, sort = TRUE) %>% 
-  group_by(title) %>% 
-  slice(1:20) %>% 
-  ungroup() %>%
-  mutate(word = reorder_within(x = word, by = n, within = title)) %>% 
-  ggplot(aes(n, word))+
-  geom_col()+
-  facet_wrap(~title, scales = "free")+
-  scale_y_reordered()
+### Task 1
 
+Count words in the books 
+Sort by number of occurence within a book (use 'reorder_within')
+Show the occurences on a sorted bar plot
+
+
+```{r 7}
 books %>% 
   unnest_tokens(word, text, token = "ngrams", n = 2)
 
@@ -138,10 +114,11 @@ books %>%
   facet_wrap(~word, ncol = 1)
 ```
 
+
 #### 4. Package ```stopwords```
 
-```{r}
-install.packages("stopwords")
+```{r 8}
+# install.packages("stopwords")
 library(stopwords)
 stopwords("ru")
 
@@ -158,17 +135,12 @@ length(stopwords("ru", source = "stopwords-iso"))
 
 [A tutorial](https://bnosac.github.io/udpipe/docs/doc1.html)
 
-```
-install.packages("udpipe")
+```{r 9}
+# install.packages("udpipe")
+
 library(udpipe)
 
 enmodel <- udpipe_download_model(language = "english")
 
 udpipe("The want of Miss Taylor would be felt every hour of every day.", object = enmodel)
-
-rumodel <- udpipe_download_model(language = "russian-syntagrus")
-
-udpipe("Жила-была на свете крыса в морском порту Вальпараисо, на складе мяса и маиса, какао и вина.", object = rumodel)
-
-udpipe("Жила-была на свете крыса в морском порту Вальпараисо, на складе мяса и маиса, какао и вина.", object = "russian-syntagrus-ud-2.4-190531.udpipe")
 ```

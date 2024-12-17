@@ -1,15 +1,15 @@
 ### Working with geodata
 
-```{r}
-install.packages("leaflet")
-install.packages("tidyverse")
+```{r 1}
+# install.packages("leaflet")
+# install.packages("tidyverse")
 library("tidyverse")
 library("leaflet")
 ```
 
 [Cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/leaflet.pdf)
 
-```{r}
+```{r 2}
 unwelcomed <- read_csv("https://raw.githubusercontent.com/agricolamz/DS_for_DH/master/data/death_of_migrants_and_refugees_from_the_Unwelcomed_project.csv")
 
 unwelcomed %>% 
@@ -61,8 +61,7 @@ https://leaflet-extras.github.io/leaflet-providers/preview/index.html
 
 We can save a map into a variable:
 
-```{r}
-unwelcomed %>% 
+```{r 3}
   filter(str_detect(date, "2014")) %>% 
   leaflet() %>% 
   addProviderTiles("Stadia.StamenTerrain") %>% 
@@ -93,11 +92,11 @@ unwelcomed %>%
   m_2015
 ```
 
-```{r}
-install.packages("leafsync")
+```{r 4}
+# install.packages("leafsync")
 library("leafsync")
 ```
 
-```{r}
+```{r 5}
 sync(m_2014, m_2015)
 ```
