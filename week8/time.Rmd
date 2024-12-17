@@ -127,6 +127,7 @@ ceiling_date(ymd("2020-01-16"), unit = "year")
 #### Depicting time
 
 ```{r 7}
+
 unwelcomed <- read_csv("https://raw.githubusercontent.com/agricolamz/DS_for_DH/master/data/death_of_migrants_and_refugees_from_the_Unwelcomed_project.csv")
 unwelcomed %>% 
   mutate(date = dmy(date)) %>% 

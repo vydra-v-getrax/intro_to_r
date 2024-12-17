@@ -137,6 +137,7 @@ length(stopwords("ru", source = "stopwords-iso"))
 
 ```{r 9}
 # install.packages("udpipe")
+
 library(udpipe)
 
 enmodel <- udpipe_download_model(language = "english")

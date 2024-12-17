@@ -62,7 +62,6 @@ https://leaflet-extras.github.io/leaflet-providers/preview/index.html
 We can save a map into a variable:
 
 ```{r 3}
-unwelcomed %>% 
   filter(str_detect(date, "2014")) %>% 
   leaflet() %>% 
   addProviderTiles("Stadia.StamenTerrain") %>% 
